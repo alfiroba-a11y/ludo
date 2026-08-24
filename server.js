@@ -16,7 +16,8 @@ const root = candidates.find(folder =>
 const types = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
-  '.js': 'application/javascript; charset=utf-8'
+  '.js': 'application/javascript; charset=utf-8',
+  '.png': 'image/png'
 };
 
 http.createServer((req, res) => {
@@ -24,9 +25,13 @@ http.createServer((req, res) => {
     return res.writeHead(500).end('index.html is missing from deployment.');
   }
 
-  const requested = req.url === '/'
+  let requested = req.url === '/'
     ? 'index.html'
     : req.url.split('?')[0].replace(/^\//, '');
+
+  if (requested === 'admin' || requested === 'admin/') {
+    requested = 'admin.html';
+  }
 
   const file = path.resolve(root, requested);
 
@@ -35,7 +40,9 @@ http.createServer((req, res) => {
   }
 
   fs.readFile(file, (error, data) => {
-    if (error) return res.writeHead(404).end('Not found');
+    if (error) {
+      return res.writeHead(404).end('Not found');
+    }
 
     res
       .writeHead(200, {
