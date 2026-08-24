@@ -72,7 +72,11 @@ function publicPage() {
         <section class="hero">
           <div>
             <p class="eyebrow">KENYA’S LUDO GAME SPACE</p>
-            <h1>Play Ludo.<br><em>Make every move count.</em></h1>
+
+            <h1>
+              Play Ludo.<br>
+              <em>Make every move count.</em>
+            </h1>
 
             <p>
               Start with a free Ludo game, choose a 2, 3 or 4 player table,
@@ -454,12 +458,12 @@ function roll() {
 
   state.busy = true;
 
+  const die = document.querySelector('#die');
+  die.classList.add('rolling');
+
   const playerRoll = 1 + Math.floor(Math.random() * 6);
 
   state.you = Math.min(28, state.you + playerRoll);
-
-  document.querySelector('#die').textContent =
-    ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][playerRoll - 1];
 
   document.querySelector('#status').textContent =
     `You rolled ${playerRoll}. Ludo bot is playing…`;
@@ -467,6 +471,11 @@ function roll() {
   draw();
 
   setTimeout(() => {
+    die.classList.remove('rolling');
+
+    document.querySelector('#die').textContent =
+      ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][playerRoll - 1];
+
     const botRoll = 1 + Math.floor(Math.random() * 6);
 
     state.bot = Math.min(28, state.bot + botRoll);
@@ -487,7 +496,7 @@ function roll() {
       `Bot rolled ${botRoll}. Your turn.`;
 
     state.busy = false;
-  }, 650);
+  }, 700);
 }
 
 function depositModal() {
