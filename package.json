@@ -1,11 +1,9 @@
-{
-  "name": "ludostake-kenya-demo",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node server.js"
-  },
-  "engines": {
-    "node": ">=18"
-  }
-}
+package.json
+server.js
+outputs/
+  ludostake-site/
+    index.html
+    styles.css
+    app.js
+    admin.html
+    kenya-ludo-board.png
