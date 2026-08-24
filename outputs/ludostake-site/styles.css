@@ -3,7 +3,6 @@
   --muted: #6e7b91;
   --blue: #3867ef;
   --blue2: #7157e8;
-  --green: #20af7c;
   --line: #e4e9f2;
   --bg: #f6f8fd;
 }
@@ -405,6 +404,7 @@ button {
 
 .game {
   margin-top: 20px;
+  overflow: hidden;
 }
 
 .game.hidden {
@@ -412,35 +412,52 @@ button {
 }
 
 .board {
+  position: relative;
+  min-height: 620px;
+  padding: 9% 8%;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
-  margin: 18px 0;
+  border: 7px solid #2d1b12;
+  border-radius: 13px;
+  background-image:
+    linear-gradient(#00000010, #00000010),
+    url("kenya-ludo-board.png");
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    inset 0 0 0 3px #d7a64d,
+    0 12px 26px #17151532;
 }
 
-.cell {
-  height: 44px;
-  border: 1px solid #dfe5ef;
-  border-radius: 7px;
-  display: grid;
-  place-items: center;
-  font-size: 10px;
-  color: #7b899f;
-  background: #fff;
+.board .cell {
+  width: 25px;
+  height: 25px;
+  min-height: 0;
+  opacity: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
 }
 
-.cell.you {
-  background: #396bed;
-  color: white;
-  border-color: #396bed;
+.board .cell.you,
+.board .cell.bot {
+  opacity: 1;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 3px 8px #0008;
 }
 
-.cell.bot {
-  box-shadow: inset 0 0 0 3px #ed895f;
+.board .cell.you {
+  background: #d12f32;
 }
 
-.cell.you.bot {
-  background: linear-gradient(135deg, #396bed 50%, #ed895f 50%);
+.board .cell.bot {
+  background: #15965b;
+}
+
+.board .cell.you.bot {
+  background: linear-gradient(135deg, #d12f32 50%, #15965b 50%);
 }
 
 .game-status {
@@ -453,6 +470,28 @@ button {
   color: var(--muted);
   border-top: 1px solid var(--line);
   padding-top: 12px;
+}
+
+#roll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#die {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  color: #263b72;
+  border-radius: 7px;
+  font-size: 20px;
+  box-shadow: 0 3px 7px #182e7040;
+}
+
+#die.rolling {
+  animation: dice-roll .65s cubic-bezier(.2, .8, .3, 1) infinite;
 }
 
 .modal-wrap {
@@ -560,6 +599,28 @@ button {
   }
 }
 
+@keyframes dice-roll {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(95deg) scale(1.18);
+  }
+
+  50% {
+    transform: rotate(190deg) scale(.86);
+  }
+
+  75% {
+    transform: rotate(275deg) scale(1.14);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
 @media (max-width: 760px) {
   .nav {
     padding: 0 18px;
@@ -601,5 +662,15 @@ button {
 
   .hero h1 {
     font-size: 43px;
+  }
+
+  .board {
+    min-height: 340px;
+    border-width: 4px;
+  }
+
+  .board .cell {
+    width: 15px;
+    height: 15px;
   }
 }
