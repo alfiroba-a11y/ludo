@@ -1,0 +1,20 @@
+const stake = document.querySelector('#stake');
+const summary = document.querySelector('#summary');
+const potentialReturn = document.querySelector('#return');
+const modal = document.querySelector('#modal');
+let mode = 'Duel', opponent = 'player';
+const money = n => `₦${Number(n || 0).toLocaleString('en-NG')}`;
+function update() {
+  const value = Number(String(stake.value).replace(/\D/g, '')) || 0;
+  stake.value = value ? value.toLocaleString('en-NG') : '';
+  potentialReturn.textContent = money(Math.floor(value * 1.9));
+  summary.textContent = `${mode === 'Duel' ? '1 vs 1' : '2 vs 2'} · ${opponent === 'player' ? 'Find a player' : 'AI opponent'} · ${money(value)} stake`;
+}
+document.querySelectorAll('.quick-stakes').forEach(group => group.addEventListener('click', e => { if(e.target.tagName === 'BUTTON'){ stake.value=e.target.textContent.replace(/\D/g,''); group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');update() }}));
+document.querySelectorAll('.mode').forEach(button => button.addEventListener('click', () => {document.querySelectorAll('.mode').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');mode=button.dataset.mode;update()}));
+document.querySelectorAll('.opponent').forEach(button => button.addEventListener('click', () => {document.querySelectorAll('.opponent').forEach(b=>b.classList.remove('selected'));button.classList.add('selected');opponent=button.dataset.opponent;document.querySelector('#opponentHint').innerHTML=opponent==='player'?'We’ll look for a verified player at your stake. If no match is found, we’ll show you an <b>AI opponent</b> before the game starts.':'You’ll play our clearly labelled AI opponent. No human identity is simulated.';update()}));
+stake.addEventListener('input', update);document.querySelector('#clearStake').addEventListener('click',()=>{stake.value='';update()});
+document.querySelector('#playNow').addEventListener('click',()=>{const amount=Number(stake.value.replace(/\D/g,''));if(amount<100){alert('Minimum stake is ₦100.');return} modal.classList.add('show');const title=document.querySelector('#modalTitle'),copy=document.querySelector('#modalCopy'),actions=document.querySelector('#modalActions'),dots=document.querySelector('.searching');document.querySelector('#modalKicker').textContent=opponent==='player'?'MATCHMAKING':'AI TABLE';title.textContent=opponent==='player'?'Looking for your opponent…':'Your AI table is ready';copy.textContent=opponent==='player'?`Searching for a verified player for a ${money(amount)} ${mode==='Duel'?'1 vs 1':'2 vs 2'} match.`:`You are about to play a transparent AI opponent for ${money(amount)}.`;actions.innerHTML='';dots.style.display=opponent==='player'?'flex':'none';setTimeout(()=>{if(!modal.classList.contains('show'))return;if(opponent==='player'){title.textContent='No player available right now';copy.textContent='A clearly labelled AI opponent is ready if you’d like to start immediately. It will never be presented as a real person.';dots.style.display='none';actions.innerHTML='<button class="modal-btn" id="confirmBot">Play AI opponent</button>'}else{actions.innerHTML='<button class="modal-btn" id="confirmBot">Start match</button>'}document.querySelector('#confirmBot')?.addEventListener('click',()=>{title.textContent='Demo match created';copy.textContent='This front-end prototype is ready for a licensed backend, identity checks, and secure wallet settlement.';actions.innerHTML='<button class="modal-btn" id="done">Done</button>';document.querySelector('#done').onclick=()=>modal.classList.remove('show')})},opponent==='player'?1500:100)});
+document.querySelector('#closeModal').addEventListener('click',()=>modal.classList.remove('show'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show')});
+document.querySelector('#fundWallet').addEventListener('click',()=>alert('Payment flow placeholder: connect this action to your server-side Paystack transaction initialization endpoint.'));
+update();
